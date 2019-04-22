@@ -29,7 +29,7 @@ public class gridmaker : MonoBehaviour
     GameObject gridHolder;
 
     public static float slideLerp = -1;
-    public float lerpSpeed = .25f;
+    public float lerpSpeed = .8f;
 
     private TextMesh scoreText;
     public int score;
@@ -132,7 +132,6 @@ public class gridmaker : MonoBehaviour
 
     public void removeMatches()
     {
-        playerScript.counter = 6;
         
         // delete tiles
         for (int x = 0; x < WIDTH; x++)

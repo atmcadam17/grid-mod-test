@@ -5,7 +5,7 @@ using UnityEngine;
 public class tilescript : MonoBehaviour
 {
     public int type;
-    public Color[] tileColors;
+    public Sprite[] tileColors;
 
     public Vector3 startPosition;
     public Vector3 destPosition;
@@ -46,7 +46,7 @@ public class tilescript : MonoBehaviour
     public void SetSprite(int rand)
     {
         type = rand;
-        GetComponent<SpriteRenderer>().color = tileColors[type];
+        GetComponent<SpriteRenderer>().sprite = tileColors[type];
     }
 
     public void SetupSlide(Vector2 newDesPos)

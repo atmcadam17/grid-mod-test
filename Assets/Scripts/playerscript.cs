@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using UnityEngine;
 using UnityEngine.Analytics;
 using UnityEngine.SocialPlatforms.GameCenter;
@@ -10,27 +11,22 @@ public class playerscript : MonoBehaviour
 {
     public Vector2 playerPos;
     public gridmaker gridMaker;
-     
-    public int counter;
-    private TextMesh counterText;
 
     private bool gameOver;
 
     private bool playtestMode;
     public bool gameStart;
+    private static int counter = 1;
     
     void Start()
     {
         gridMaker = GameObject.Find("GameManager").GetComponent<gridmaker>();
         playerPos = gridMaker.playerPos;
-        counterText = GameObject.Find("counter").GetComponent<TextMesh>();
-        counter = 6;
         gameOver = false;
     }
 
     void Update()
     {
-        counterText.text = counter.ToString();
         
         if (gameOver == false && !gridMaker.repopulate)
         {
@@ -41,25 +37,48 @@ public class playerscript : MonoBehaviour
                 SceneManager.LoadScene("GameOver");
             }
             
-            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+            // swap movement
+            if (Input.GetKeyDown(KeyCode.W))
             {
                 Swap(0,-1);
                 gameStart = true;
             }
-            else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+            else if (Input.GetKeyDown(KeyCode.A))
             {
                 Swap(1,0);
+                gameObject.transform.localScale = new Vector3(-1, 1, 0);
                 gameStart = true;
             }
-            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            else if (Input.GetKeyDown(KeyCode.S))
             {
                 Swap(0,1);
                 gameStart = true;
             }
-            else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+            else if (Input.GetKeyDown(KeyCode.D))
             {
                 Swap(-1,0);
+                gameObject.transform.localScale = new Vector3(1, 1, 0);
                 gameStart = true;
+            }
+            
+            // chomp
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                gameObject.GetComponent<Animator>().SetTrigger("chompUp");
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                gameObject.transform.localScale = new Vector3(-1, 1, 0);
+                gameObject.GetComponent<Animator>().SetTrigger("chompSide");
+            }
+            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                gameObject.GetComponent<Animator>().SetTrigger("chompDown");
+            }
+            else if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                gameObject.transform.localScale = new Vector3(1, 1, 0);
+                gameObject.GetComponent<Animator>().SetTrigger("chompSide");
             }
         }
 
@@ -100,8 +119,6 @@ public class playerscript : MonoBehaviour
 
             // move player to new position
             playerPos = newLocation;
-            
-            counter--;
         }
     }
 }
